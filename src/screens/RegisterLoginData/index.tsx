@@ -15,6 +15,7 @@ import {
   HeaderTitle,
   Form
 } from './styles';
+import theme from '../../global/styles/theme';
 interface FormData {
   title: string;
   email: string;
@@ -80,6 +81,7 @@ export function RegisterLoginData() {
             }
             control={control}
             placeholder="Escreva o título aqui"
+            placeholderTextColor={theme.colors.text}
             autoCapitalize="sentences"
             autoCorrect
           />
@@ -94,6 +96,7 @@ export function RegisterLoginData() {
             autoCorrect={false}
             autoCapitalize="none"
             keyboardType="email-address"
+            placeholderTextColor={theme.colors.text}
           />
           <Input
             title="Senha"
@@ -104,6 +107,7 @@ export function RegisterLoginData() {
             control={control}
             secureTextEntry
             placeholder="Escreva a senha aqui"
+            placeholderTextColor={theme.colors.text}
           />
 
           <Button
