@@ -4,7 +4,6 @@ import { useForm } from 'react-hook-form';
 import { RFValue } from 'react-native-responsive-fontsize';
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import uuid from 'react-native-uuid';
 
 import { Input } from '../../components/Form/Input';
@@ -16,6 +15,7 @@ import {
   Form
 } from './styles';
 import theme from '../../global/styles/theme';
+import { useStorageData } from '../../hooks/useStorageData';
 interface FormData {
   title: string;
   email: string;
@@ -29,6 +29,7 @@ const schema = Yup.object().shape({
 })
 
 export function RegisterLoginData() {
+  const { insertRegister } = useStorageData();
   const {
     control,
     handleSubmit,
@@ -43,24 +44,15 @@ export function RegisterLoginData() {
       id: String(uuid.v4()),
       ...formData
     }
-    // Save data on AsyncStorage
-
+  
     try {
-      const response = await AsyncStorage.getItem('@passmanager:logins');
-      const responseCurrent = response ? JSON.parse(response) : [];
-
-      const responseformatted = [
-          ...responseCurrent,
-          newLoginData
-      ]
-
-      await AsyncStorage.setItem('@passmanager:logins', JSON.stringify(responseformatted))
-      reset();
-  } catch (error) {
+      return await insertRegister(newLoginData); 
+    } catch (error) {
       console.log(error);
       Alert.alert('Não foi possivel seu registro')
-  }
-
+    }finally{
+      reset();
+    }
   }
 
   return (

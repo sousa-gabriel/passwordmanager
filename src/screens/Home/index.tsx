@@ -1,9 +1,9 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from '@react-navigation/native';
 
 import { SearchBar } from '../../components/SearchBar';
 import { LoginDataItem } from '../../components/LoginDataItem';
+import { useStorageData } from '../../hooks/useStorageData';
 
 import {
   Container,
@@ -24,19 +24,14 @@ type LoginListDataProps = LoginDataProps[];
 export function Home() {
   const [searchListData, setSearchListData] = useState<LoginListDataProps>([]);
   const [data, setData] = useState<LoginListDataProps>([]);
+  const { SearchRegister } = useStorageData();
 
   async function loadData() {
-    // Get asyncStorage data, use setSearchListData and setData
-    const response = await AsyncStorage.getItem('@passmanager:logins');
-
-    if(!response) {
-      return;
-    }
+    const response = await SearchRegister();
     const password = response ? JSON.parse(response) : [];
-
+    
     setSearchListData(password);
-    setData(password);
-
+    setData(password)
   }
   useEffect(() => {
     loadData();
@@ -47,11 +42,9 @@ export function Home() {
   }, []));
 
   function handleFilterLoginData(search: string) {
-    // Filter results inside data, save with setSearchListData
     let filtro = data.filter(valor => valor.title.includes(search))
 
     setSearchListData(filtro);
-    
   }
 
   return (
